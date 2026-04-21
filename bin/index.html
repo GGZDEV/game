@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Hollow Cells — Haxe + Heaps.io</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #0a0a14;
+            color: #d8d8e0;
+            font-family: "Courier New", monospace;
+            overflow: hidden;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #wrap {
+            position: relative;
+            box-shadow: 0 0 60px rgba(120, 60, 180, 0.35);
+            border: 1px solid #24243c;
+        }
+        canvas#webgl {
+            display: block;
+            width: 960px;
+            height: 540px;
+            image-rendering: pixelated;
+            background: #0d0d18;
+            outline: none;
+        }
+        #tech-label {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+            color: #555;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <canvas id="webgl" width="960" height="540" tabindex="0"></canvas>
+    </div>
+    <div id="tech-label">Haxe 4.3 · Heaps.io · WebGL</div>
+    <script src="game.js"></script>
+    <script>
+        // Focus canvas on load so keyboard input is captured immediately.
+        window.addEventListener('load', () => document.getElementById('webgl').focus());
+        document.addEventListener('click', () => document.getElementById('webgl').focus());
+    </script>
+</body>
+</html>

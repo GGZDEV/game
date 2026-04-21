@@ -1,55 +1,86 @@
 # Hollow Cells
 
-Un roguelike metroidvania nerveux inspiré de Dead Cells. 100% HTML5 + JavaScript, aucune dépendance.
+A nervous metroidvania roguelike inspired by Dead Cells, built with the same
+tech stack Motion Twin uses: **Haxe 4** and **[Heaps.io](https://heaps.io)**
+(the engine written by Nicolas Cannasse).
 
-## Lancer le jeu
+The project targets JavaScript/WebGL so it runs in any modern browser. Heaps
+can also target HashLink for native desktop builds, which is the path used by
+shipping Motion Twin titles.
 
-Le jeu utilise des modules ES, il faut donc le servir en HTTP (un simple `file://` ne marchera pas).
+## Running
 
-```bash
-python3 -m http.server 8000
-# puis ouvrez http://localhost:8000
-```
-
-## Contrôles
-
-| Touche | Action |
-|---|---|
-| `← →` / `A D` / `Q D` | Se déplacer |
-| `Espace` / `W` / `Z` | Sauter (double saut, wall jump) |
-| `Shift` | Roulade (i-frames) |
-| `X` / `J` | Attaque principale (épée) |
-| `C` / `K` | Attaque secondaire (arc) |
-| `E` | Boire une potion |
-| `F` / `Entrée` | Interagir avec la porte de sortie |
-| `↓` / `S` | Tomber des plateformes (en sautant) |
-
-## Mécaniques
-
-- **Combat nerveux** : attaques rapides avec hit-stop, screen shake, knockback et effets de sang.
-- **Mouvement fluide** : double saut, dash avec i-frames, wall slide + wall jump, coyote time, jump buffering.
-- **Niveaux procéduraux** : chaque étage est généré aléatoirement (sols ondulés, plateformes, pics, salles).
-- **4 biomes** : Prison des Âmes → Égouts Toxiques → Remparts Oubliés → Donjon du Roi.
-- **4 types d'ennemis** :
-  - **Bandit** : patrouille et charge au corps à corps.
-  - **Sabreur** : s'élance après une phase de préparation.
-  - **Archer** : tire des flèches en ligne de vue.
-  - **Chauve-souris** : vole et fond sur le joueur.
-- **Méta-progression** : à la mort, les cellules récoltées alimentent 4 améliorations permanentes (vitalité, fureur, fioles, alchimie), stockées en `localStorage`.
-- **Loot** : les ennemis laissent tomber des cellules ◆ et parfois des fioles 🧪.
-
-## Structure
+### Build
 
 ```
-index.html      — Shell HTML + HUD + écrans
-style.css       — UI et overlays
-js/main.js      — Boucle principale, caméra, transitions
-js/level.js     — Génération procédurale + collision tilemap
-js/player.js    — Physique joueur, mouvement, combat
-js/enemies.js   — 4 IA d'ennemis
-js/weapon.js    — Épée (swing) + projectiles
-js/particles.js — Système de particules (sang, étincelles, poussière)
-js/meta.js      — Progression permanente + localStorage
-js/input.js     — Clavier (keys + justPressed)
-js/utils.js     — Math helpers (AABB, clamp, random)
+haxe build.hxml
+```
+
+This produces `bin/game.js`.
+
+### Play
+
+Serve the `bin/` folder with any static file server and open `index.html`:
+
+```
+cd bin && python3 -m http.server 8123
+# then browse to http://127.0.0.1:8123/
+```
+
+### Dependencies
+
+The build uses Heaps as a `haxelib` library. If you don't have it, clone the
+repo and register it as a dev lib:
+
+```
+git clone https://github.com/HeapsIO/heaps.git /tmp/heaps
+haxelib dev heaps /tmp/heaps
+git clone https://github.com/HaxeFoundation/format.git /tmp/format
+haxelib dev format /tmp/format
+```
+
+## Controls
+
+| Action        | Keys                                 |
+| ------------- | ------------------------------------ |
+| Move          | Arrow keys / A D / Q D               |
+| Jump          | Space / W / Z (double jump, wall jump) |
+| Roll / Dash   | Shift (i-frames)                     |
+| Sword         | X / J                                |
+| Bow           | C / K                                |
+| Potion        | E                                    |
+| Door / next   | F                                    |
+| Start / retry | Enter                                |
+
+## Features
+
+- Procedurally generated rooms stitched into multi-platform levels
+- Four themed biomes: Prison of Souls, Toxic Sewers, Forgotten Ramparts, King's Keep
+- Four enemy archetypes: grunt, slasher, archer, bat — each with its own AI
+- Tight platformer feel: coyote time, jump buffering, wall slide, wall jump,
+  double jump, i-frame dash
+- Melee sword arc with hit-stop, screen shake and particles
+- Arrow bow with gravity-affected projectiles
+- Cells and flasks as drops with magnetic attraction
+- Meta-progression via `localStorage`: spend cells on permanent upgrades
+- Biome banners, vignette, flash overlay, camera lookahead
+
+## Source layout
+
+```
+src/
+  Main.hx        entry point (hxd.App subclass)
+  Const.hx       tuning constants
+  Game.hx        top-level orchestrator, camera, entity lists
+  Level.hx       tilemap, procedural generation, AABB collision
+  Biome.hx       biome palette / enemy roster tables
+  Entity.hx      base physics entity
+  Player.hx      player movement + combat
+  Enemies.hx     EnemyBase + Grunt / Slasher / Archer / Bat + factory
+  SwordSwing.hx  melee hitbox
+  Projectile.hx  arrows
+  Pickup.hx      cells / flasks
+  Particles.hx   pooled particles
+  UI.hx          HUD + overlay screens
+  Meta.hx        localStorage-backed upgrade shop
 ```

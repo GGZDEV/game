@@ -1,0 +1,6 @@
+# Hollow Cells — Haxe + Heaps.io build (JS target)
+-cp src
+-main Main
+-lib heaps
+-dce full
+-js bin/game.js

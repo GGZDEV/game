@@ -1,0 +1,3 @@
+# Compiled JS output — rebuild locally via `haxe build.hxml`
+bin/game.js
+bin/game.js.map
